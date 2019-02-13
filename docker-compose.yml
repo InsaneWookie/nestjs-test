@@ -4,16 +4,16 @@ volumes:
   node_modules:
   pgdata:
 services:
-  app:
-    image: node:10.11.0
-#    command: node app.js
-    command: tail -f /dev/null
-    working_dir: /home/node/app
-    ports: 
-    - "8080:3000"
-    volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
+#  app:
+#    image: node:10.11.0
+##    command: node app.js
+#    command: tail -f /dev/null
+#    working_dir: /home/node/app
+#    ports:
+#    - "8080:3000"
+#    volumes:
+#      - .:/home/node/app
+#      - node_modules:/home/node/app/node_modules
   db:
     image: postgres:10.5-alpine
     restart: always
