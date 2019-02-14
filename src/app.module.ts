@@ -12,12 +12,13 @@ import { GameModule } from './game/game.module';
 import { AuthController } from "./auth/auth.controller";
 import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: '192.168.99.100',
       port: 5433,
       username: 'postgres',
       password: 'example',
@@ -31,11 +32,12 @@ import { UserModule } from './user/user.module';
       }
     }),
     TypeOrmModule.forFeature([Game, Machine, GamePlayed, User]),
-    GameModule,
-    UserModule
+    AuthModule
+    // GameModule,
+    // UserModule
   ],
-  controllers: [AppController, GameController, AuthController],
-  providers: [AppService, GameService, UserService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {
   constructor(){

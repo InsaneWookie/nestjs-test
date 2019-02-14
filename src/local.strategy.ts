@@ -11,20 +11,27 @@ import { PassportStrategy } from '@nestjs/passport';
 // import { generateHashedPassword, generateSalt } from '../../../utilities/encryption';
 // import { MESSAGES, USER_MODEL_TOKEN } from '../../../server.constants';
 
+const config = {
+  usernameField: 'username',
+  passportField: 'password',
+};
+
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
+
   constructor(private readonly userService: UserService) {
-    super();
-    // this.init();
+
+    super(config, () => console.log);
+   // this.init();
   }
 
-  async validate(token: string) {
-    const user = await this.authService.validateUser(token);
-    if (!user) {
-      throw new UnauthorizedException();
-    }
-    return user;
-  }
+  // async validate(token: string) {
+  //   const user = await this.authService.validateUser(token);
+  //   if (!user) {
+  //     throw new UnauthorizedException();
+  //   }
+  //   return user;
+  // }
 
   private init(): void {
 
