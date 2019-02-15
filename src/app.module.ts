@@ -35,6 +35,6 @@ import { AuthModule } from "./auth/auth.module";
 })
 export class AppModule {
   constructor(){
-    console.log(__dirname);
+    console.log("Working directory: " + __dirname);
   }
 }

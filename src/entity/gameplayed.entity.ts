@@ -11,6 +11,9 @@ export class GamePlayed {
   @Column('timestamp')
   date_time: Date;
 
+  @Column()
+  play_count: number;
+
   @Column('timestamp')
   createdAt: Date;
 

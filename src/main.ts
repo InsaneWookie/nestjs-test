@@ -7,6 +7,7 @@ declare const module: any;
 async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api/v1');
 
   app.use(session({
     secret: 'a secret',

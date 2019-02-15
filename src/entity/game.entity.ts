@@ -10,6 +10,11 @@ export class Game {
   @Column()
   name: string;
 
+  @Column()
+  full_name: string;
+
+
+
   @OneToOne(type => GamePlayed, gp => gp.game) // specify inverse side as a second parameter
   gameplayed: GamePlayed;
 
