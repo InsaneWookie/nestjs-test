@@ -1,9 +1,6 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
-
-
-
 
 @Controller('auth')
 export class AuthController {
@@ -16,9 +13,18 @@ export class AuthController {
 
   @Get('data')
   @UseGuards(AuthGuard())
-  findAll(@Req() req) {
-    return req.user;
+  findAll() {
+    return "hello";
+    // return req.user;
     // This route is restricted by AuthGuard
     // JWT strategy
+  }
+
+  @Post('login')
+  async login(@Body() body){
+
+    console.log(body);
+
+    return await this.authService.login(body.username, body.password);
   }
 }

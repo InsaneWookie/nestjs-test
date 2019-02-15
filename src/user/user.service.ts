@@ -1,6 +1,5 @@
 import { Injectable} from '@nestjs/common';
 import { User } from '../entity/user.entity';
-import { Game } from '../entity/game.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository  } from '@nestjs/typeorm';
 
@@ -11,11 +10,15 @@ export class UserService {
               private readonly user: Repository<User>) {
   }
 
-  async findOneByToken(token: string): Promise<any> {
-
-  }
+  // async findOneByToken(token: string): Promise<any> {
+  //
+  // }
 
   async findOne(id): Promise<User> {
     return await this.user.findOne(id);
+  }
+
+  async findByUserName(userName: string): Promise<User> {
+    return await this.user.findOne({username: userName});
   }
 }

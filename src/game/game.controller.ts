@@ -1,7 +1,7 @@
-import { Controller, Get, Session, Request, Post, Body } from '@nestjs/common';
+import { Controller, Get, Session, Request, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { Game } from "../entity/game.entity";
-import { AppService } from "../app.service";
 import { GameService } from "./game.service";
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('game')
 export class GameController {
@@ -10,8 +10,11 @@ export class GameController {
   }
 
   @Get()
-  findAll(@Session() session): Promise<Game[]> {
-    console.log(session);
-    return this.gameService.findAll(2);
+  @UseGuards(AuthGuard())
+  findAll(@Req() req): Promise<Game[]> {
+    console.log('game route');
+    console.log(req.user);
+    const groupId = req.user.groupId;
+    return this.gameService.findAll(groupId);
   }
 }
