@@ -14,11 +14,18 @@ export class UserService {
   //
   // }
 
+  async find(groupId: number): Promise<User[]> {
+    return await this.user.createQueryBuilder('user')
+      .innerJoin('user.userGroups', 'ug')
+      .where('ug.group_id = :groupId', {groupId})
+      .getMany();
+  }
+
   async findOne(id): Promise<User> {
     return await this.user.findOne(id);
   }
 
   async findByUserName(userName: string): Promise<User> {
-    return await this.user.findOne({username: userName});
+    return await this.user.findOne({where: {username: userName}, relations: ['groups']});
   }
 }

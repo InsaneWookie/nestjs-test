@@ -64,12 +64,19 @@ UPDATE score SET machine_id = 1;
 ALTER TABLE score ALTER COLUMN machine_id SET NOT NULL;
 
 
-ALTER TABLE rawscore ADD COLUMN machine_id integer NOT NULL REFERENCES machine(id);
+ALTER TABLE rawscore ADD COLUMN machine_id integer REFERENCES machine(id);
 UPDATE rawscore SET machine_id = 1;
 ALTER TABLE rawscore ALTER COLUMN machine_id SET NOT NULL;
 
+TRUNCATE gameplayed;
+ALTER TABLE gameplayed ADD COLUMN play_count integer NOT NULL DEFAULT 0;
 ALTER TABLE gameplayed ADD COLUMN machine_id integer NOT NULL REFERENCES machine(id);
-UPDATE gameplayed SET machine_id = 1;
-ALTER TABLE gameplayed ALTER COLUMN machine_id SET NOT NULL;
+
+ALTER TABLE gameplayed ADD CONSTRAINT unique_game_id_machine_id UNIQUE (game_id, machine_id);
+
+-- only allow one gameplayed record per machine per game
+INSERT INTO gameplayed (game_id, date_time, play_count, "createdAt", "updatedAt", machine_id)
+SELECT id, last_played, play_count, now(), now(), 1 from game where last_played is not null;
+
 
 COMMIT;
