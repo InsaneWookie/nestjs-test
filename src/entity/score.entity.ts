@@ -15,6 +15,9 @@ export class Score {
   @Column()
   score: string;
 
+  @Column()
+  alias_id: number;
+
   @ManyToOne(type => Machine, m => m.scores)
   @JoinColumn({ name: "machine_id" })
   machine: Machine;

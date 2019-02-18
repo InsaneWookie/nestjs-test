@@ -6,9 +6,12 @@ import { GamePlayed } from '../entity/gameplayed.entity';
 import { Score } from '../entity/score.entity';
 import { User } from '../entity/user.entity';
 import _ = require('underscore');
+import path = require("path");
+
 import { ScoredecoderService } from '../scoredecoder/scoredecoder.service';
 
 import gameMaps = require('../scoredecoder/game_mappings/gameMaps.json');
+import { Machine } from "../entity/machine.entity";
 
 @Injectable()
 export class GameService {
@@ -21,6 +24,8 @@ export class GameService {
               private readonly score: Repository<Score>,
               @InjectRepository(User)
               private readonly user: Repository<User>,
+              @InjectRepository(Machine)
+              private readonly machine: Repository<Machine>,
               private readonly scoreDecoder: ScoredecoderService) {
 
   }
@@ -384,9 +389,10 @@ export class GameService {
    * @param newScores - decoded scores
    * @param callback (error, [Score])
    */
-  async addScores (game, machine, newScores, callback) {
+  async addScores (game: Game, machine: Machine, newScores, callback) {
 
-    let groupId = machine.group;
+    machine = await this.machine.findOne(machine.id, {relations: ['group']});
+    let groupId = machine.group.id ;
     let gameId = game.id;
     let machineIds = [machine.id]; //todo better finding of all scores for the group
 
@@ -419,7 +425,7 @@ export class GameService {
     if(createdScores.length) {
 
       //TODO: pull this out so it can be reused
-      //await this.updateScoreAliases(groupId, game, () => {});
+      await this.updateScoreAliases(groupId, game, () => {});
 
       //we need to re-fetch the created scores so we have the updated alias data
       let scoreIds = [];
@@ -452,27 +458,28 @@ export class GameService {
 //   return newRawScore;
 //   }
 //
-// /**
-//  * This updates all the aliases against the scores (just does a blanket update off all scores for a game)
-//  * @param {Game} game
-//  * @param callback(err)
-//  */
-//   async updateScoreAliases(groupId, game, callback) {
-//
-//   let query = "UPDATE score SET alias_id = a.id " +
-//     "FROM user_group ug, alias a " +
-//     "WHERE ug.user_id = a.user_group_id " +
-//     "AND lower(score.name) = lower(a.name) " +
-//     "AND ug.group_id = $1 " +
-//     "AND score.game_id = $2 " +
-//     "AND score.machine_id IN (SELECT machine_id FROM machine WHERE group_id = $1)";
-//
-//   let result = await sails.sendNativeQuery(query, [groupId, game.id]);
-//
-//   callback(null);
-//   return result;
-//
-// }
+/**
+ * This updates all the aliases against the scores (just does a blanket update off all scores for a game)
+ * @param groupId
+ * @param {Game} game
+ * @param callback(err)
+ */
+  async updateScoreAliases(groupId, game, callback) {
+
+    let query = "UPDATE score SET alias_id = a.id " +
+      "FROM user_group ug, alias a " +
+      "WHERE ug.user_id = a.user_group_id " +
+      "AND lower(score.name) = lower(a.name) " +
+      "AND ug.group_id = $1 " +
+      "AND score.game_id = $2 " +
+      "AND score.machine_id IN (SELECT machine_id FROM machine WHERE group_id = $1)";
+
+    let result = await getConnection().query(query, [groupId, game.id]);
+
+    callback(result);
+    return result;
+
+}
 //
 // /**
 //  * This function goes through the game mappings and sets game.has_mapping to true
@@ -501,5 +508,30 @@ export class GameService {
 //     callbackFn(err, updatedGames);
 //   });
 // }
+
+
+  async upload(gameName, machineId, file): Promise<any> {
+
+    //const filePath = file.fd;
+    const fileName = file.originalname;
+    const fileType = path.extname(fileName).substring(1);
+    //var gameName = req.body.gamename;
+
+    //invalid game so try and work it out from the file name
+    if (typeof gameName != 'string' || gameName.length === 0) {
+      gameName = fileName.substring(0, fileName.lastIndexOf('.'));
+    }
+
+    const game = await this.game.findOne({name: gameName});
+    const machine = await this.machine.findOne(machineId);
+    const rawBuffer = file.buffer;
+
+    const createdScores = await this.uploadScores(rawBuffer, fileType, game, machine);
+
+    const scores = await this.score.findByIds(createdScores.map(s => s.id));
+
+    return scores;
+
+  }
 
 }

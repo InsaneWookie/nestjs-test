@@ -1,4 +1,16 @@
-import { Controller, Get, Session, Request, Post, Body, UseGuards, Req, Param, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Session,
+  Request,
+  Post,
+  Body,
+  UseGuards,
+  Req,
+  Param,
+  Logger,
+  UseInterceptors, FileInterceptor, UploadedFile
+} from '@nestjs/common';
 import { Game } from '../entity/game.entity';
 import { GameService } from './game.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -31,5 +43,11 @@ export class GameController {
     return this.gameService.find(id, groupId);
   }
 
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  upload(@UploadedFile() file, @Req() req){
+    return this.gameService.upload(req.body.gamename, 1, file);
+  }
 
 }

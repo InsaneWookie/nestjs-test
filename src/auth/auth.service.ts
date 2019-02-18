@@ -24,7 +24,11 @@ export class AuthService {
   async login(userName: string, password: string) {
     const u = await this.userService.findByUserName(userName);
 
-    if (!u.groups) {
+    if(!u){
+      throw "User not found: " + userName;
+    }
+
+    if (!u.groups.length) {
       throw 'No group for this user: ' + u.id;
     }
 
