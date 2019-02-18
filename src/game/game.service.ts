@@ -30,7 +30,10 @@ export class GameService {
 
   }
 
-  async findAll(groupId: number): Promise<Game[]> {
+  async findAll(groupId: number, orderBy = 'name ASC'): Promise<Game[]> {
+
+    const sort: string[] = orderBy.split(' ');
+    const direction: any = sort[1];
 
     let q = this.gamePlayed.createQueryBuilder('gp')
       .leftJoinAndSelect('gp.machine', 'm')
@@ -44,7 +47,7 @@ export class GameService {
       //.where('gameplayed.id IS NOT NULL')
       .where('game.has_mapping = true')
       .andWhere('game.clone_of IS NULL')
-      .orderBy('game.name', 'ASC')
+      .orderBy('game.' + sort[0], sort[1] as any) //Not sure if dynamically doing this order by is a good idea
       //.orderBy()
       .limit(1000)
       .getMany();

@@ -22,6 +22,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from "./http.interceptor";
+import { RegisterComponent } from './register/register.component';
 // import { far } from '@fortawesome/free-regular-svg-icons';
 
 @NgModule({
@@ -36,6 +37,7 @@ import { AuthInterceptor } from "./http.interceptor";
     UserDetailComponent,
     UserProfileComponent,
     LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,

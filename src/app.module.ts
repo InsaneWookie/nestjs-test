@@ -18,11 +18,11 @@ import { Alias } from './entity/alias.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: '192.168.99.100',
+      host: 'localhost',
       port: 5433,
       username: 'postgres',
       password: 'example',
-      database: 'mame',
+      database: 'mamebackup',
       // entities: [__dirname + '/**/*.entity{.ts,.js}'],
       entities: [Game, Machine, GamePlayed, User, Score, Group, UserGroup, Alias],
       synchronize: false,

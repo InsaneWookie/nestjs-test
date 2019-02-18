@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { UserService } from '../user/user.service';
+import bcrypt = require('bcrypt');
+import { User } from '../entity/user.entity';
 
 // import { JwtPayload } from './interfaces/jwt-payload.interface';
 
@@ -24,8 +26,8 @@ export class AuthService {
   async login(userName: string, password: string) {
     const u = await this.userService.findByUserName(userName);
 
-    if(!u){
-      throw "User not found: " + userName;
+    if (!u) {
+      throw 'User not found: ' + userName;
     }
 
     if (!u.groups.length) {
@@ -57,5 +59,34 @@ export class AuthService {
     console.log(payload);
 
     return {user, groupId: payload.groupId};
+  }
+
+  async register(body: any) {
+
+    console.log(body);
+    if (body.password !== body.repeat_password) {
+      throw 'Passwords do not match';
+    }
+
+    const userName = body.username;
+    const password = body.password;
+
+    const hashedPassword = await this.hashPassword(password);
+
+    const user = new User();
+    user.username = userName;
+    user.password = hashedPassword;
+
+    const newUser = this.userService.save(user, 1);
+    return newUser;
+
+  }
+
+  async hashPassword(password): Promise<string> {
+
+    // const salt = await bcrypt.salt
+    const hash = await bcrypt.hash(password, 10);
+
+    return hash;
   }
 }

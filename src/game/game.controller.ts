@@ -4,7 +4,7 @@ import {
   Session,
   Request,
   Post,
-  Body,
+  Query,
   UseGuards,
   Req,
   Param,
@@ -29,10 +29,11 @@ export class GameController {
   }
 
   @Get()
-  findAll(@Req() req): Promise<Game[]> {
+  findAll(@Req() req, @Query() params): Promise<Game[]> {
     Logger.log('game route');
     Logger.log(req.user);
     const groupId = req.user.groupId;
+    // const sort = params.sort || 'name ASC';
     return this.gameService.findAll(groupId);
   }
 
@@ -45,8 +46,9 @@ export class GameController {
 
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('filename'))
   upload(@UploadedFile() file, @Req() req){
+    console.log(file);
     return this.gameService.upload(req.body.gamename, 1, file);
   }
 
