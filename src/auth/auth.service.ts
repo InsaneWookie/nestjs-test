@@ -55,7 +55,7 @@ export class AuthService {
     // put some validation logic here
     // for example query user by id/email/username
 
-    let user = await this.userService.findOne(payload.userId);
+    let user = await this.userService.findOne(payload.userId, payload.groupId);
     console.log(payload);
 
     return {user, groupId: payload.groupId};
@@ -68,17 +68,26 @@ export class AuthService {
       throw 'Passwords do not match';
     }
 
+    if(!body.invite_code){
+      throw "Invite code not set";
+    }
+
+    const inviteCode = body.invite_code;
+    const user = await this.userService.findOneByInviteCode(inviteCode);
+
+    if(!user){
+      throw 'Invalid invite code';
+    }
+
     const userName = body.username;
     const password = body.password;
 
-    const hashedPassword = await this.hashPassword(password);
-
-    const user = new User();
     user.username = userName;
-    user.password = hashedPassword;
+    user.password = await this.hashPassword(password);
+    user.inviteCode = null;
 
-    const newUser = this.userService.save(user, 1);
-    return newUser;
+    const newUser = await this.userService.save(user);
+    return this.login(newUser.username, newUser.password);
 
   }
 

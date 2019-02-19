@@ -1,8 +1,10 @@
-<form>
+<form class="form-horizontal" role="form" (ngSubmit)="onSubmit()" #registerForm="ngForm">
 
-  <input type="text" name="username">
-  <input type="password" name="password">
-  <input type="password" name="repeat_password">
+  <input type="text" name="username" placeholder="user name" [(ngModel)]="registerModel.username"><br>
+  <input type="text" name="email" placeholder="email" [(ngModel)]="registerModel.email"><br>
+  <input type="password" name="password" placeholder="password" [(ngModel)]="registerModel.password"><br>
+  <input type="password" name="repeat_password" placeholder="repeat password" [(ngModel)]="registerModel.repeat_password"><br>
+  <input type="text" name="invite_code" placeholder="invite code" [(ngModel)]="registerModel.invite_code"/><br>
 
   <button name="submit" type="submit">Register</button>
 </form>

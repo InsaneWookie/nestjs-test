@@ -38,7 +38,7 @@ export class HomeComponent implements OnInit {
   }
 
   getLastPlayed(): void {
-    this.gameService.getLastPlayed().subscribe((lastPlayed) => {
+    this.gameService.getLastPlayed().subscribe((lastPlayed: any) => {
       lastPlayed = lastPlayed.filter(l => l.gameplayed !== null)
         .sort((a, b) => (a.gameplayed.date_time < b.gameplayed.date_time) ? 1 : -1)
         .slice(0, 10);

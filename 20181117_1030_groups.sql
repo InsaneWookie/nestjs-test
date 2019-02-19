@@ -57,6 +57,7 @@ ALTER TABLE alias DROP COLUMN user_id;
 
 
 ALTER TABLE "user" ADD COLUMN is_admin boolean DEFAULT false NOT NULL;
+ALTER TABLE "user" ADD COLUMN invite_code text DEFAULT NULL;
 
 -- need a machine id on the score so we know what machine a score is created from
 ALTER TABLE score ADD COLUMN machine_id integer REFERENCES machine(id);

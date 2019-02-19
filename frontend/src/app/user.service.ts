@@ -70,4 +70,9 @@ export class UserService {
       return of(result as T);
     };
   }
+
+  inviteUser(inviteEmail: string): Observable<any> {
+    return this.http.post<any>('/api/v1/user/invite', {inviteEmail})
+      .pipe(catchError(this.handleError('getInviteUser', {})));
+  }
 }

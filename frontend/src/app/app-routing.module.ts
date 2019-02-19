@@ -9,6 +9,7 @@ import { UserDetailComponent } from "./user-detail/user-detail.component";
 import { UserCreateComponent } from "./user-create/user-create.component";
 import { UserProfileComponent } from "./user-profile/user-profile.component";
 import { LoginComponent } from "./login/login.component";
+import { RegisterComponent } from "./register/register.component";
 
 const routes: Routes = [
   { path: '' , component: HomeComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'users-create', component: UserCreateComponent },
   { path: 'profile/:id', component: UserProfileComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'register/:inviteCode', component: RegisterComponent },
 
 
 ];

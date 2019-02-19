@@ -3,6 +3,8 @@ import { User } from '../entity/user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository  } from '@nestjs/typeorm';
 import { UserGroup } from '../entity/usergroup.entity';
+import uuid = require('uuid/v4');
+import { promises } from "fs";
 
 @Injectable()
 export class UserService {
@@ -13,9 +15,6 @@ export class UserService {
               private readonly userGroupRepo: Repository<UserGroup>) {
   }
 
-  // async findOneByToken(token: string): Promise<any> {
-  //
-  // }
 
   async find(groupId: number): Promise<User[]> {
     return await this.userRepository.createQueryBuilder('user')
@@ -24,22 +23,41 @@ export class UserService {
       .getMany();
   }
 
-  async findOne(id): Promise<User> {
-    return await this.userRepository.findOne(id);
+  async findOne(id, groupId: number): Promise<User> {
+    return await this.userRepository.createQueryBuilder('user')
+      .innerJoin('user.userGroups', 'ug')
+      .where('ug.group_id = :groupId', {groupId})
+      .andWhere('user.id = :id', {id})
+      .getOne();
+  }
+
+  async findOneByInviteCode(inviteCode): Promise<User>{
+    return await this.userRepository.findOne({inviteCode});
   }
 
   async findByUserName(userName: string): Promise<User> {
     return await this.userRepository.findOne({where: {username: userName}, relations: ['groups']});
   }
 
-  async save(user: User, groupId: number): Promise<User> {
+  async save(user: User, groupId?: number): Promise<User> {
 
     const newUser = await this.userRepository.save(user);
 
-    await this.userGroupRepo.createQueryBuilder('ug').insert().into('user_group')
-      .values({group: groupId, user: user.id})
-      .execute();
-
+    if(groupId) {
+      await this.userGroupRepo.createQueryBuilder('ug').insert().into('user_group')
+        .values({group: groupId, user: user.id})
+        .execute();
+    }
     return newUser;
   }
+
+  async inviteUser(groupId: number, inviteEmail: string): Promise<User>{
+
+    const newUser = new User();
+    newUser.email = inviteEmail;
+    newUser.inviteCode = uuid();
+
+    return this.save(newUser, groupId);
+  }
+
 }

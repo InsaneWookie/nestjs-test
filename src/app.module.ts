@@ -13,12 +13,14 @@ import { Score } from './entity/score.entity';
 import { Group } from './entity/group.entity';
 import { UserGroup } from './entity/usergroup.entity';
 import { Alias } from './entity/alias.entity';
+import { AliasController } from './alias/alias.controller';
+import { AliasModule } from './alias/alias.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
+      host: '192.168.99.100',
       port: 5433,
       username: 'postgres',
       password: 'example',
@@ -35,9 +37,10 @@ import { Alias } from './entity/alias.entity';
     AuthModule,
     GameModule,
     UserModule,
-    GroupModule
+    GroupModule,
+    AliasModule
   ],
-  controllers: [],
+  controllers: [AliasController],
   providers: [ScoredecoderService],
 })
 export class AppModule {

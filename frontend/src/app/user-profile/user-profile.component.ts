@@ -16,6 +16,9 @@ export class UserProfileComponent implements OnInit {
   newAliases = [];
   aliasesToRemove = [];
 
+  inviteEmail = '';
+  inviteLinkDisplay = '';
+
   constructor(private route: ActivatedRoute, private router: Router, private userService: UserService) {
   }
 
@@ -56,4 +59,9 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
+  onInviteSubmit() {
+    this.userService.inviteUser(this.inviteEmail).subscribe(response => {
+      this.inviteLinkDisplay = response.inviteLink;
+    });
+  }
 }
