@@ -25,7 +25,8 @@ export class UserService {
 
   async findOne(id, groupId: number): Promise<User> {
     return await this.userRepository.createQueryBuilder('user')
-      .innerJoin('user.userGroups', 'ug')
+      .innerJoinAndSelect('user.userGroups', 'ug')
+      .leftJoinAndSelect('ug.aliases', 'a', 'ug.id = a.user_group_id')
       .where('ug.group_id = :groupId', {groupId})
       .andWhere('user.id = :id', {id})
       .getOne();

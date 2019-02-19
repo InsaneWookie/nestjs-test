@@ -40,7 +40,7 @@ import { AliasModule } from './alias/alias.module';
     GroupModule,
     AliasModule
   ],
-  controllers: [AliasController],
+  controllers: [],
   providers: [ScoredecoderService],
 })
 export class AppModule {

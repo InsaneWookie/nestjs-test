@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AliasService } from "./alias.service";
 
@@ -9,12 +9,29 @@ export class AliasController {
   constructor(private readonly aliasService: AliasService) {
   }
 
-  @Post(':id')
+  @Post()
   create(@Req() req, @Body() body){
 
-    const id = 1;
+    console.log(body);
+    const groupId = req.user.groupId;
 
-    return this.aliasService.save(body)
+    if(!body.length){
+      return [];
+    }
+
+    return this.aliasService.saveAll(body, groupId)
 
   }
+
+  @Post('delete')
+  delete(@Req() req, @Body() body){
+    //TODO check valid to delete
+
+    if(!body.length){
+      return [];
+    }
+
+    return this.aliasService.removeAll(body);
+  }
+
 }
