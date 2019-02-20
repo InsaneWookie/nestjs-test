@@ -23,6 +23,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from "./http.interceptor";
 import { RegisterComponent } from './register/register.component';
+import { AuthGuard } from './auth.guard';
 // import { far } from '@fortawesome/free-regular-svg-icons';
 
 @NgModule({
@@ -53,7 +54,7 @@ import { RegisterComponent } from './register/register.component';
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  }],
+  }, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {

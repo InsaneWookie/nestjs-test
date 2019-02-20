@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, OneToMany, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Alias } from './alias.entity';
 import { Group } from './group.entity';
 import { UserGroup } from './usergroup.entity';
@@ -22,6 +22,12 @@ export class User {
   @Exclude()
   @Column({type: 'text', name: 'invite_code'})
   inviteCode: string;
+
+  @CreateDateColumn({type: 'timestamptz'})
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToMany(type => Group, group => group.users)
   groups: Group[];

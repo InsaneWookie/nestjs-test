@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
+import { routerNgProbeToken } from '@angular/router/src/router_module';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +11,20 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Mame Highscores';
 
+  isLoggedIn = false;
+
+  constructor(private readonly authService: AuthService, private router: Router) {
+  }
+
   ngOnInit() {
+    this.isLoggedIn = this.authService.isLoggedIn();
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.isLoggedIn = false;
+
+    this.router.navigate(['/login']);
 
   }
 }

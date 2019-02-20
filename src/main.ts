@@ -9,13 +9,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1');
 
-  app.use(session({
-    secret: 'a secret',
-    name: 'abcd',
-    resave: true,
-    saveUninitialized: true,
-    cookie: { path: '/', httpOnly: true, secure: false, maxAge: null }
-  }));
+  // app.use(session({
+  //   secret: 'a secret',
+  //   name: 'abcd',
+  //   resave: true,
+  //   saveUninitialized: true,
+  //   cookie: { path: '/', httpOnly: true, secure: false, maxAge: null }
+  // }));
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
