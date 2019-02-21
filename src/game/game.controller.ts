@@ -48,7 +48,7 @@ export class GameController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('filename'))
   upload(@UploadedFile() file, @Req() req){
-    console.log(file);
+
     return this.gameService.upload(req.body.gamename, 1, file);
   }
 

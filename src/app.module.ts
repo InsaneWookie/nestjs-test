@@ -15,6 +15,9 @@ import { UserGroup } from './entity/usergroup.entity';
 import { Alias } from './entity/alias.entity';
 import { AliasController } from './alias/alias.controller';
 import { AliasModule } from './alias/alias.module';
+import { ScoreController } from './score/score.controller';
+import { ScoreService } from './score/score.service';
+import { ScoreModule } from './score/score.module';
 
 @Module({
   imports: [
@@ -38,13 +41,14 @@ import { AliasModule } from './alias/alias.module';
     GameModule,
     UserModule,
     GroupModule,
-    AliasModule
+    AliasModule,
+    ScoreModule
   ],
-  controllers: [],
-  providers: [ScoredecoderService],
+  controllers: [ScoreController],
+  providers: [ScoredecoderService, ScoreService],
 })
 export class AppModule {
   constructor() {
-    console.log('Working directory: ' + __dirname);
+
   }
 }

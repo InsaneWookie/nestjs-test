@@ -12,7 +12,7 @@ export class AliasController {
   @Post()
   create(@Req() req, @Body() body){
 
-    console.log(body);
+
     const groupId = req.user.groupId;
 
     if(!body.length){

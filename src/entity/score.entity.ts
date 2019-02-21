@@ -1,7 +1,9 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Group } from './group.entity';
 import { Machine } from './machine.entity';
 import { Game } from './game.entity';
+import { Alias } from "./alias.entity";
+import { User } from "./user.entity";
 
 @Entity()
 export class Score {
@@ -16,7 +18,13 @@ export class Score {
   score: string;
 
   @Column()
-  alias_id: number;
+  rank: number;
+
+  @ManyToOne(type => Alias, a => a.scores)
+  @JoinColumn({ name: "alias_id" })
+  alias: Alias;
+
+  user: User;
 
   @ManyToOne(type => Machine, m => m.scores)
   @JoinColumn({ name: "machine_id" })

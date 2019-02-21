@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.http.post('/api/v1/auth/login', this.login).subscribe((res: any) => {
-      console.log(res);
+
 
       const expiresAt = moment().add(res.expiresIn, 'second');
 

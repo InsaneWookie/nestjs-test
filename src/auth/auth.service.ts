@@ -56,14 +56,14 @@ export class AuthService {
     // for example query user by id/email/username
 
     let user = await this.userService.findOne(payload.userId, payload.groupId);
-    console.log(payload);
+
 
     return {user, groupId: payload.groupId};
   }
 
   async register(body: any) {
 
-    console.log(body);
+
     if (body.password !== body.repeat_password) {
       throw 'Passwords do not match';
     }
