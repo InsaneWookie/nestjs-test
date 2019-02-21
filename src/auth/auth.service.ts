@@ -38,6 +38,10 @@ export class AuthService {
       throw 'More than group per user not supported yet, user: ' + u.id;
     }
 
+    if(!await this.isValidPassword(password, u.password)){
+      throw 'Invalid password'; //TODO: 401?
+    }
+
     const user: JwtPayload = {
       userId: u.id,
       groupId: u.groups[0].id
@@ -48,6 +52,7 @@ export class AuthService {
     return {
       expiresIn: 3600,
       accessToken,
+      userId: u.id,
     };
   }
 
@@ -97,5 +102,18 @@ export class AuthService {
     const hash = await bcrypt.hash(password, 10);
 
     return hash;
+  }
+
+  async isValidPassword(inputPassword, storedPassword) {
+    try{
+      return await bcrypt.compare(inputPassword, storedPassword);
+    } catch (e) {
+      //invalid password
+      console.log(e);
+      return false;
+    }
+
+    return false;
+
   }
 }

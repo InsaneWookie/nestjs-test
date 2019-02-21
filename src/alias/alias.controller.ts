@@ -19,6 +19,13 @@ export class AliasController {
       return [];
     }
 
+    //check that all the user ids are valid for this user
+    const invalid = body.some(alias => alias.user !== req.user.user.id); //if we find one id that doesn't match the logged in user then error
+
+    if(invalid){
+      throw "Invalid user in alias"
+    }
+
     return this.aliasService.saveAll(body, groupId)
 
   }
@@ -30,6 +37,9 @@ export class AliasController {
     if(!body.length){
       return [];
     }
+
+    //TODO: check all deletes are valid for logged in user
+
 
     return this.aliasService.removeAll(body);
   }

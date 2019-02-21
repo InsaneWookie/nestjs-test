@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
+import { Observable } from "rxjs";
+import { User } from "./models/user";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() {
+  constructor(private http: HttpClient) {
   }
 
   isLoggedIn() {
@@ -16,8 +19,29 @@ export class AuthService {
     return !!token && !hasExpired;
   }
 
+  // login(): Observable<User> {
+  //
+  //   return this.http.post('/api/v1/auth/login', this.login)
+  //     .pipe()
+  //     .subscribe((res: any) => {
+  //
+  //
+  //     const expiresAt = moment().add(res.expiresIn, 'second');
+  //
+  //     localStorage.setItem('id_token', res.accessToken);
+  //     localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
+  //
+  //     window.location.href = '/';
+  //   });
+  //
+  // }
+
   logout() {
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+  }
+
+  getUserId() {
+    return parseInt(localStorage.getItem('user_id'), 10);
   }
 }

@@ -27,6 +27,7 @@ export class LoginComponent implements OnInit {
 
       localStorage.setItem('id_token', res.accessToken);
       localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
+      localStorage.setItem('user_id', res.userId);
 
       window.location.href = '/';
     });
