@@ -4,6 +4,7 @@ import { JwtPayload } from './jwt-payload.interface';
 import { UserService } from '../user/user.service';
 import bcrypt = require('bcrypt');
 import { User } from '../entity/user.entity';
+import uuid = require('uuid/v4');
 
 // import { JwtPayload } from './interfaces/jwt-payload.interface';
 
@@ -38,7 +39,16 @@ export class AuthService {
       throw 'More than group per user not supported yet, user: ' + u.id;
     }
 
-    if(!await this.isValidPassword(password, u.password)){
+    if (u.password === null) {
+      u.inviteCode = uuid();
+      await this.userService.save(u);
+      return {
+        registrationRequired: true,
+        inviteCode: u.inviteCode
+      };
+    }
+
+    if (!await this.isValidPassword(password, u.password)) {
       throw 'Invalid password'; //TODO: 401?
     }
 
@@ -62,25 +72,23 @@ export class AuthService {
 
     let user = await this.userService.findOne(payload.userId, payload.groupId);
 
-
     return {user, groupId: payload.groupId};
   }
 
   async register(body: any) {
 
-
     if (body.password !== body.repeat_password) {
       throw 'Passwords do not match';
     }
 
-    if(!body.invite_code){
-      throw "Invite code not set";
+    if (!body.invite_code) {
+      throw 'Invite code not set';
     }
 
     const inviteCode = body.invite_code;
     const user = await this.userService.findOneByInviteCode(inviteCode);
 
-    if(!user){
+    if (!user) {
       throw 'Invalid invite code';
     }
 
@@ -105,7 +113,7 @@ export class AuthService {
   }
 
   async isValidPassword(inputPassword, storedPassword) {
-    try{
+    try {
       return await bcrypt.compare(inputPassword, storedPassword);
     } catch (e) {
       //invalid password

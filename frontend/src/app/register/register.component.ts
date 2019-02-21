@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit {
 
   };
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router,) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
     this.registerModel.invite_code = this.route.snapshot.paramMap.get('inviteCode');
