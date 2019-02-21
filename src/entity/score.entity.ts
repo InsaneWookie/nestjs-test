@@ -1,4 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm';
 import { Group } from './group.entity';
 import { Machine } from './machine.entity';
 import { Game } from './game.entity';
@@ -19,6 +28,12 @@ export class Score {
 
   @Column()
   rank: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(type => Alias, a => a.scores)
   @JoinColumn({ name: "alias_id" })
