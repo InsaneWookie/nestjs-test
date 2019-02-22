@@ -6,6 +6,10 @@ import { GamePlayed } from '../entity/gameplayed.entity';
 import { User } from '../entity/user.entity';
 import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Score } from "../entity/score.entity";
+import { Group } from "../entity/group.entity";
+import { UserGroup } from "../entity/usergroup.entity";
+import { Alias } from "../entity/alias.entity";
 
 describe('Game Controller', () => {
   let controller: GameController;
@@ -15,13 +19,13 @@ describe('Game Controller', () => {
       imports: [
         TypeOrmModule.forRoot({
           type: 'postgres',
-          host: 'localhost',
+          host: '192.168.99.100',
           port: 5433,
           username: 'postgres',
           password: 'example',
-          database: 'mamebackup',
+          database: 'mame',
           // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          entities: [Game, Machine, GamePlayed, User],
+          entities: [Game, Machine, GamePlayed, User, Score, Group, UserGroup, Alias],
           synchronize: false,
           logging: true,
           cli: {
@@ -29,7 +33,7 @@ describe('Game Controller', () => {
           }
         }),
         PassportModule.register({ defaultStrategy: 'jwt' }),
-        TypeOrmModule.forFeature([Game, Machine, GamePlayed, User])],
+        TypeOrmModule.forFeature([Game, Machine, GamePlayed, User, Score, Group, UserGroup, Alias])],
       controllers: [GameController],
     }).compile();
 
