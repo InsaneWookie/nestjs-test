@@ -85,6 +85,10 @@ export class AuthService {
       throw 'Invite code not set';
     }
 
+    if(!body.username || body.username.trim() === ''){
+      throw "Invalid user name"
+    }
+
     const inviteCode = body.invite_code;
     const user = await this.userService.findOneByInviteCode(inviteCode);
 
@@ -94,13 +98,15 @@ export class AuthService {
 
     const userName = body.username;
     const password = body.password;
+    const email = body.email;
 
     user.username = userName;
     user.password = await this.hashPassword(password);
+    user.email = email;
     user.inviteCode = null;
 
     const newUser = await this.userService.save(user);
-    return this.login(newUser.username, newUser.password);
+    return this.login(newUser.username, password);
 
   }
 

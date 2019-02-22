@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user';
 import * as moment from 'moment';
 import { Router } from '@angular/router';
+import { AuthService } from "../auth.service";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
 
   login: { username: '', password: '' };
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, private authService: AuthService) {
   }
 
   ngOnInit() {
@@ -26,13 +27,7 @@ export class LoginComponent implements OnInit {
       if(res.registrationRequired){
         this.router.navigate([`/register/${res.inviteCode}`]);
       } else {
-
-        const expiresAt = moment().add(res.expiresIn, 'second');
-
-        localStorage.setItem('id_token', res.accessToken);
-        localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
-        localStorage.setItem('user_id', res.userId);
-
+        this.authService.login(res);
         window.location.href = '/';
       }
     });

@@ -30,8 +30,8 @@ export class GameController {
 
   @Get()
   findAll(@Req() req, @Query() params): Promise<Game[]> {
-    Logger.log('game route');
-    Logger.log(req.user);
+    // Logger.log('game route');
+    // Logger.log(req.user);
     const groupId = req.user.groupId;
     // const sort = params.sort || 'name ASC';
     return this.gameService.findAll(groupId);

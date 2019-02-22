@@ -93,7 +93,7 @@ export class GameService {
            JOIN alias a ON ug.id = a.user_group_id \
               JOIN score s ON a.id = s.alias_id \
            WHERE \
-            ug.group_id = 1 \
+            ug.group_id = $1 \
             AND s.rank <= 5 \
            GROUP BY s.game_id, ug.user_id ) player_points \
          GROUP BY user_id \
@@ -104,7 +104,7 @@ export class GameService {
       // extraWhere +
       'ORDER BY total_points DESC';
 
-    return await getConnection().query(pointsQuery);
+    return await getConnection().query(pointsQuery, [groupId]);
 
   }
 
